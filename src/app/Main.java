@@ -23,12 +23,7 @@ public class Main extends Application {
         GameClock clock = new GameClock();
 
         final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                System.out.println(clock.getElapsedTimeMillis() / 1000);
-            }
-        }, 1, 1, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(() -> System.out.println(clock.getElapsedTimeMillis() / 1000), 1, 1, TimeUnit.SECONDS);
     }
 
 
