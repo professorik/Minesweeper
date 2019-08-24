@@ -99,15 +99,18 @@ public class ControllerOfGameTable implements Initializable {
         GridPane root = new GridPane();
         root.setGridLinesVisible(true);
 
+        double fieldWIDTH = (9 * 40)/WIDTH;
+        double fieldHEIGHT = (9 * 40)/HEIGHT;
+
         for (int i = 0; i < HEIGHT; i++) {
-            root.getRowConstraints().add(new RowConstraints(40));
-            root.getColumnConstraints().add(new ColumnConstraints(40));
+            root.getRowConstraints().add(new RowConstraints(Math.min(fieldWIDTH, fieldHEIGHT)));
+            root.getColumnConstraints().add(new ColumnConstraints(Math.min(fieldWIDTH, fieldHEIGHT)));
             for (int j = 0; j < WIDTH; j++) {
                 AnchorPane pane2 = new AnchorPane();
                 VBox pane = new VBox();
                 pane.setFillWidth(true);
-                pane.setPrefWidth((9 * 40)/WIDTH);
-                pane.setPrefHeight((9 * 40)/HEIGHT);
+                pane.setPrefWidth(Math.min(fieldWIDTH, fieldHEIGHT));
+                pane.setPrefHeight(Math.min(fieldWIDTH, fieldHEIGHT));
                 // pane.getChildren().add(new Label("0"));
 
                 Button button = new Button();
@@ -121,8 +124,8 @@ public class ControllerOfGameTable implements Initializable {
                 Label label = new Label(table[i][j].isRigged() ? "1" : "0");
                 label.setVisible(false);
                 //label.setAlignment(Pos.CENTER);
-                label.setTranslateX(12.5);
-                label.setTranslateY(12.5);
+                label.setTranslateX(12.5 * Math.min(fieldWIDTH, fieldHEIGHT) / 40);
+                label.setTranslateY(12.5 * Math.min(fieldWIDTH, fieldHEIGHT) / 40);
 
                 pane2.getChildren().addAll(pane, label);
                 button.setOnAction(event -> {
