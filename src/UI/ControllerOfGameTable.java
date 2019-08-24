@@ -99,8 +99,8 @@ public class ControllerOfGameTable implements Initializable {
         GridPane root = new GridPane();
         root.setGridLinesVisible(true);
 
-        double fieldWIDTH = (18 * 40.0)/WIDTH;
-        double fieldHEIGHT = (18 * 40.0)/HEIGHT;
+        double fieldWIDTH = (18 * 40.0 * (Math.log10(WIDTH) / Math.log10(30)))/WIDTH;
+        double fieldHEIGHT = (18 * 40.0 * (Math.log10(HEIGHT) / Math.log10(30)))/HEIGHT;
 
         double size = Math.min(fieldWIDTH, fieldHEIGHT);
 
