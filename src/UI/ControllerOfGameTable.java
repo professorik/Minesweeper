@@ -11,6 +11,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -109,10 +111,18 @@ public class ControllerOfGameTable implements Initializable {
        // root.setVgap(10);
         System.out.println(size);
 
+        for (int i = 0; i < table.length; i++) {
+            for (int j = 0; j < table[i].length; j++) {
+                System.out.print(table[i][j].isRigged() ? 1 : 0);
+            }
+            System.out.println();
+        }
         for (int i = 0; i < HEIGHT; i++) {
             root.getRowConstraints().add(new RowConstraints(size));
             root.getColumnConstraints().add(new ColumnConstraints(size));
             for (int j = 0; j < WIDTH; j++) {
+                boolean fl = table[i][j].isRigged();
+
                 AnchorPane pane2 = new AnchorPane();
                 VBox pane = new VBox();
                 pane.setFillWidth(true);
@@ -132,16 +142,26 @@ public class ControllerOfGameTable implements Initializable {
                 button.setMaxHeight(Double.MAX_VALUE);
                 button.setMaxWidth(Double.MAX_VALUE);
 
-                Label label = new Label(table[i][j].isRigged() ? "1" : "0");
+                Label label = new Label("" + MainOfGameTable.game.getSurroundingBombCount(i , j));
                 label.setVisible(false);
+                Image image = new Image("bomb.png", 24, 24, true, true, true);
+                ImageView imageView = new ImageView(image);
+                imageView.setVisible(false);
+
+                label.setTranslateX(12.5 * size / 40);
+                label.setTranslateY(12.5 * size / 40);
                 //label.setAlignment(Pos.CENTER);
                 label.setTranslateX(12.5 * size / 40);
                 label.setTranslateY(12.5 * size / 40);
 
-                pane2.getChildren().addAll(pane, label);
+                pane2.getChildren().addAll(pane, label, imageView);
                 button.setOnAction(event -> {
                     button.setVisible(false);
-                    label.setVisible(true);
+                    if (fl){
+                        imageView.setVisible(true);
+                    }else {
+                        label.setVisible(true);
+                    }
                 });
                 root.add(pane2, j, i);
             }
