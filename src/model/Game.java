@@ -6,7 +6,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Game {
 
     public String fieldString() {
-       StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
 
         for (Piece[] pieces :
                 field) {

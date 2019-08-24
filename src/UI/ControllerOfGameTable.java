@@ -15,6 +15,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.Game;
+import model.Piece;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -34,13 +36,23 @@ public class ControllerOfGameTable implements Initializable {
     private MenuItem getInstruction;
 
 
+    private Piece[][] table = MainOfGameTable.game.getField();
     // private GridPane table;
 
-    private final int WIDTH = 9;
-    private final int HEIGHT = 9;
+    private int WIDTH = 9;
+    private int HEIGHT = 9;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+       startGame();
+
+        setSizes.setOnAction(event -> showResizeDialog());
+        setBombsQuantity.setOnAction(event -> System.out.println(setBombsQuantity.getText()));
+        setLevel.setOnAction(event -> System.out.println(setLevel.getText()));
+        getInstruction.setOnAction(event -> System.out.println(getInstruction.getText()));
+    }
+
+    private void startGame(){
         GridPane root = new GridPane();
         root.setGridLinesVisible(true);
 
@@ -63,11 +75,11 @@ public class ControllerOfGameTable implements Initializable {
                 button.setMaxHeight(Double.MAX_VALUE);
                 button.setMaxWidth(Double.MAX_VALUE);
 
-                Label label = new Label("12");
+                Label label = new Label(table[i][j].isRigged()? "1" : "0");
                 label.setVisible(false);
-                label.setAlignment(Pos.CENTER);
-                //  label.setTranslateX(12.5);
-                //label.setTranslateY(12.5);
+                //label.setAlignment(Pos.CENTER);
+                label.setTranslateX(12.5);
+                label.setTranslateY(12.5);
 
                 pane2.getChildren().addAll(pane, label);
                 button.setOnAction(event -> {
@@ -79,13 +91,7 @@ public class ControllerOfGameTable implements Initializable {
         }
 
         borderPane.setCenter(root);
-
-        setSizes.setOnAction(event -> showResizeDialog());
-        setBombsQuantity.setOnAction(event -> System.out.println(setBombsQuantity.getText()));
-        setLevel.setOnAction(event -> System.out.println(setLevel.getText()));
-        getInstruction.setOnAction(event -> System.out.println(getInstruction.getText()));
     }
-
 
     private void showResizeDialog() {
         final Stage dialogStage = new Stage();
@@ -96,9 +102,6 @@ public class ControllerOfGameTable implements Initializable {
         Button yesBtn = new Button("OK");
         Button noBtn = new Button("Cancel");
 
-        yesBtn.setOnAction(event -> {
-            dialogStage.close();
-        });
         noBtn.setOnAction(event -> dialogStage.close());
 
         HBox hBox = new HBox();
@@ -138,6 +141,16 @@ public class ControllerOfGameTable implements Initializable {
         vBox.setSpacing(10.0);
         vBox.getChildren().addAll(enterX, enterY, hBox);
         vBox.setPadding(new Insets(10, 10, 0, 10));
+
+        yesBtn.setOnAction(event -> {
+            if (inputX.getText().length() * inputY.getText().length() > 0) {
+                WIDTH = Integer.valueOf(inputX.getText());
+                HEIGHT = Integer.valueOf(inputY.getText());
+                MainOfGameTable.game = new Game(WIDTH , HEIGHT , Game.GameLevel.EASY);
+                startGame();
+            }
+            dialogStage.close();
+        });
 
         dialogStage.setScene(new Scene(vBox));
         dialogStage.show();
