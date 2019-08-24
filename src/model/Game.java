@@ -53,7 +53,6 @@ public class Game {
         public abstract int getWidth();
         public abstract int getHeight();
     }
-
     public enum GameLevel {
         EASY {
             @Override
@@ -88,11 +87,9 @@ public class Game {
     private static Piece[][] generateField(int width, int height, GameLevel level) {
         Piece[][] generatedField = new Piece[width][height];
 
-        int[][] fieldArray = new int[width][height];
-
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                
+                    generatedField[i][j] = new Piece(Math.random() >= 0.5);
             }
         }
 
