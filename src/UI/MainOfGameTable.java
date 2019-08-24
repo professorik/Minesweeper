@@ -21,7 +21,7 @@ public class MainOfGameTable extends Application {
     public static Game game;
 
     public static void main(String[] args) {
-        game = new Game(9 , 9 , Game.GameLevel.EASY);
+        game = new Game(30 , 30 , Game.GameLevel.EASY);
         launch(args);
     }
 }

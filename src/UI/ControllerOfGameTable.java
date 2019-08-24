@@ -49,8 +49,8 @@ public class ControllerOfGameTable implements Initializable {
     private Piece[][] table;
     // private GridPane table;
 
-    private int WIDTH = 9;
-    private int HEIGHT = 9;
+    private int WIDTH =30;
+    private int HEIGHT = 30;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -99,18 +99,25 @@ public class ControllerOfGameTable implements Initializable {
         GridPane root = new GridPane();
         root.setGridLinesVisible(true);
 
-        double fieldWIDTH = (9 * 40)/WIDTH;
-        double fieldHEIGHT = (9 * 40)/HEIGHT;
+        double fieldWIDTH = (18 * 40.0)/WIDTH;
+        double fieldHEIGHT = (18 * 40.0)/HEIGHT;
+
+        double size = Math.min(fieldWIDTH, fieldHEIGHT);
+
+        //root.setMaxWidth((40 * WIDTH)/ 9);
+       // root.setMaxHeight((40 * HEIGHT) / 9);
+       // root.setVgap(10);
+        System.out.println(size);
 
         for (int i = 0; i < HEIGHT; i++) {
-            root.getRowConstraints().add(new RowConstraints(Math.min(fieldWIDTH, fieldHEIGHT)));
-            root.getColumnConstraints().add(new ColumnConstraints(Math.min(fieldWIDTH, fieldHEIGHT)));
+            root.getRowConstraints().add(new RowConstraints(size));
+            root.getColumnConstraints().add(new ColumnConstraints(size));
             for (int j = 0; j < WIDTH; j++) {
                 AnchorPane pane2 = new AnchorPane();
                 VBox pane = new VBox();
                 pane.setFillWidth(true);
-                pane.setPrefWidth(Math.min(fieldWIDTH, fieldHEIGHT));
-                pane.setPrefHeight(Math.min(fieldWIDTH, fieldHEIGHT));
+                pane.setPrefWidth(size);
+                pane.setPrefHeight(size);
                 // pane.getChildren().add(new Label("0"));
 
                 Button button = new Button();
@@ -124,8 +131,8 @@ public class ControllerOfGameTable implements Initializable {
                 Label label = new Label(table[i][j].isRigged() ? "1" : "0");
                 label.setVisible(false);
                 //label.setAlignment(Pos.CENTER);
-                label.setTranslateX(12.5 * Math.min(fieldWIDTH, fieldHEIGHT) / 40);
-                label.setTranslateY(12.5 * Math.min(fieldWIDTH, fieldHEIGHT) / 40);
+                label.setTranslateX(12.5 * size / 40);
+                label.setTranslateY(12.5 * size / 40);
 
                 pane2.getChildren().addAll(pane, label);
                 button.setOnAction(event -> {
