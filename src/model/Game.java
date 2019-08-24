@@ -196,7 +196,7 @@ public class Game {
     }
 
     public void unrevealPiece(int posX, int posY) {
-        getPiece(posX, posY).unreveal();
+        getPiece(posX, posY).reveal();
     }
 
     private Piece getPiece(int posX, int posY) {

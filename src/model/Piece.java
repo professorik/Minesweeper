@@ -1,11 +1,11 @@
 package model;
 
 public class Piece {
-    private boolean isRigged = false;
+    private boolean isRigged;
     private boolean isFlagged = false;
     private boolean isVisible = false;
 
-    public void unreveal () {
+    public void reveal() {
         this.isVisible = true;
     }
 
