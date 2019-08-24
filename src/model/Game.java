@@ -144,7 +144,7 @@ public class Game {
     public int getSurroundingBombCount (int posX, int posY) {
         int count = 0;
 
-        if (posX < 0 || posX > width || posY < 0 || posY > height) {
+        if (posX < 0 || posX > width - 1 || posY < 0 || posY > height - 1) {
             throw new RuntimeException("Invalid coordinates!");
         }
 
@@ -161,7 +161,7 @@ public class Game {
             }
         }
 
-        if (posX < width && posY > 0) {
+        if (posX < width - 1 && posY > 0) {
             if (isPieceRigged(posX + 1, posY - 1)) {
                 count++;
             }
@@ -173,25 +173,25 @@ public class Game {
             }
         }
 
-        if (posX < width) {
+        if (posX < width - 1) {
             if (isPieceRigged(posX + 1, posY)) {
                 count++;
             }
         }
         //next row
-        if (posX > 0 && posY < height) {
+        if (posX > 0 && posY < height - 1) {
             if (isPieceRigged(posX - 1, posY + 1)) {
                 count++;
             }
         }
 
-        if (posY < height) {
+        if (posY < height - 1) {
             if (isPieceRigged(posX, posY + 1)) {
                 count++;
             }
         }
 
-        if (posX < width && posY < height) {
+        if (posX < width - 1 && posY < height - 1) {
             if (isPieceRigged(posX + 1, posY + 1)) {
                 count++;
             }

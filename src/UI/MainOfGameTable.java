@@ -17,7 +17,6 @@ public class MainOfGameTable extends Application {
         primaryStage.show();
     }
 
-
     public static Game game;
 
     public static void main(String[] args) {
