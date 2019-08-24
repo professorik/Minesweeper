@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.ControllerOfGameTable">
+   <top>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="Settings">
+                  <items>
+                    <MenuItem fx:id="setSizes" mnemonicParsing="false" text="Set Sizes" />
+                        <MenuItem fx:id="setBombsQuantity" mnemonicParsing="false" text="Set bombs quantity" />
+                        <MenuItem fx:id="setLevel" mnemonicParsing="false" text="Set level" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                  <items>
+                    <MenuItem fx:id="getInstruction" mnemonicParsing="false" text="Instruction" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: black;" />
+         </children>
+      </VBox>
+   </top>
+</BorderPane>
