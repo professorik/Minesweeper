@@ -116,8 +116,12 @@ public class ControllerOfGameTable implements Initializable {
                 AnchorPane pane2 = new AnchorPane();
                 VBox pane = new VBox();
                 pane.setFillWidth(true);
+                pane.setMinWidth(size);
+                pane.setMinHeight(size);
                 pane.setPrefWidth(size);
                 pane.setPrefHeight(size);
+                pane.setMaxHeight(size);
+                pane.setMaxWidth(size);
                 // pane.getChildren().add(new Label("0"));
 
                 Button button = new Button();
