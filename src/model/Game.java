@@ -1,10 +1,7 @@
 package model;
 
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Stream;
 
 public class Game {
 
@@ -120,6 +117,10 @@ public class Game {
         return generatedField;
     }
 
+    public Piece[][] getField() {
+        return field;
+    }
+
     public Game(int width, int height, GameLevel level) {
         if (width < 0 || height < 0) {
             throw new RuntimeException("Field width and height must be > 0!");
@@ -129,4 +130,5 @@ public class Game {
 
         this.field = generateField(width, height, level);
     }
+
 }
