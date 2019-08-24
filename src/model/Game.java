@@ -2,7 +2,7 @@ package model;
 
 public class Game {
 
-    public enum GameLevel {
+    public enum FieldSize {
         /**
          *
          */
@@ -52,7 +52,6 @@ public class Game {
         public abstract int getHeight();
     }
 
-    private GameLevel level;
     private GameClock clock = new GameClock();
 
     private int width;
@@ -63,16 +62,14 @@ public class Game {
      * @param level
      * @param clock
      */
-    public Game(GameLevel level, GameClock clock) {
-        this.level = level;
+    public Game(FieldSize level, GameClock clock) {
         this.clock = clock;
 
         this.width = level.getWidth();
         this.height = level.getHeight();
     }
 
-    public Game(GameLevel level, GameClock clock, int width, int height) {
-        this.level = level;
+    public Game(GameClock clock, int width, int height) {
         this.clock = clock;
 
         if (width < 0 || height < 0) {
