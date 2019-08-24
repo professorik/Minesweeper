@@ -15,6 +15,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import model.Piece;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -34,6 +35,7 @@ public class ControllerOfGameTable implements Initializable {
     private MenuItem getInstruction;
 
 
+    private Piece[][] table = MainOfGameTable.game.getField();
     // private GridPane table;
 
     private final int WIDTH = 9;
@@ -63,11 +65,11 @@ public class ControllerOfGameTable implements Initializable {
                 button.setMaxHeight(Double.MAX_VALUE);
                 button.setMaxWidth(Double.MAX_VALUE);
 
-                Label label = new Label("12");
+                Label label = new Label(table[i][j].isRigged()? "1" : "0");
                 label.setVisible(false);
-                label.setAlignment(Pos.CENTER);
-                //  label.setTranslateX(12.5);
-                //label.setTranslateY(12.5);
+                //label.setAlignment(Pos.CENTER);
+                  label.setTranslateX(12.5);
+                label.setTranslateY(12.5);
 
                 pane2.getChildren().addAll(pane, label);
                 button.setOnAction(event -> {
