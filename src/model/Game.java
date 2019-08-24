@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Random;
+
 public class Game {
 
     public enum FieldSize {
@@ -9,12 +11,12 @@ public class Game {
         EASY {
             @Override
             public int getWidth() {
-                return 3;
+                return 9;
             }
 
             @Override
             public int getHeight() {
-                return 3;
+                return 9;
             }
         },
 
@@ -24,12 +26,12 @@ public class Game {
         MEDIUM {
             @Override
             public int getWidth() {
-                return 9;
+                return 30;
             }
 
             @Override
             public int getHeight() {
-                return 9;
+                return 30;
             }
         },
 
@@ -44,7 +46,7 @@ public class Game {
 
             @Override
             public int getHeight() {
-                return 30;
+                return 45;
             }
         };
 
@@ -52,34 +54,58 @@ public class Game {
         public abstract int getHeight();
     }
 
-    private GameClock clock = new GameClock();
+    public enum GameLevel {
+        EASY {
+            @Override
+            public float getBombPercent() {
+                return 0.1234f;
+            }
+        },
+        MEDIUM {
+            @Override
+            public float getBombPercent() {
+                return 0.246f;
+            }
+        },
+        HARD {
+            @Override
+            public float getBombPercent() {
+                return 0.34f;
+            }
+        };
 
-    private int width;
-    private int height;
-
-    public Game(FieldSize level) {
-        this.width = level.getWidth();
-        this.height = level.getHeight();
+        public abstract float getBombPercent();
     }
 
-    public Game(int width, int height) {
+    private GameLevel level;
+    private Piece[][] field;
+
+    public Game(FieldSize size, GameLevel level) {
+        this.level = level;
+        this.field = generateField(size.getWidth(), size.getHeight(),level);
+    }
+
+    private static Piece[][] generateField(int width, int height, GameLevel level) {
+        Piece[][] generatedField = new Piece[width][height];
+
+        int[][] fieldArray = new int[width][height];
+
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                
+            }
+        }
+
+        return generatedField;
+    }
+
+    public Game(int width, int height, GameLevel level) {
         if (width < 0 || height < 0) {
             throw new RuntimeException("Field width and height must be > 0!");
         }
 
-        this.width = width;
-        this.height = height;
-    }
+        this.level = level;
 
-    public GameClock getClock() {
-        return clock;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
+        this.field = generateField(width, height, level);
     }
 }
