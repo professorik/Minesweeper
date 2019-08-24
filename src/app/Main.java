@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import model.Game;
 import model.GameClock;
 
 import java.util.concurrent.Executors;
@@ -20,10 +21,13 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root, 300, 275));
         primaryStage.show();
 
-        GameClock clock = new GameClock();
+//        GameClock clock = new GameClock();
+//
+//        final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+//        scheduler.scheduleAtFixedRate(() -> System.out.println(clock.getElapsedTimeMillis() / 1000), 1, 1, TimeUnit.SECONDS);
 
-        final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        scheduler.scheduleAtFixedRate(() -> System.out.println(clock.getElapsedTimeMillis() / 1000), 1, 1, TimeUnit.SECONDS);
+        Game game = new Game(Game.FieldSize.EASY, Game.GameLevel.EASY);
+        System.out.println(game.fieldString());
     }
 
 

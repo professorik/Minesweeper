@@ -1,8 +1,23 @@
 package model;
 
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Stream;
 
 public class Game {
+
+    public String fieldString() {
+       StringBuilder stringBuilder = new StringBuilder();
+
+        for (Piece[] pieces :
+                field) {
+            stringBuilder.append(Arrays.toString(pieces)).append("\n");
+        }
+
+        return stringBuilder.toString();
+    }
 
     public enum FieldSize {
         /**
@@ -51,8 +66,10 @@ public class Game {
         };
 
         public abstract int getWidth();
+
         public abstract int getHeight();
     }
+
     public enum GameLevel {
         EASY {
             @Override
@@ -81,7 +98,7 @@ public class Game {
 
     public Game(FieldSize size, GameLevel level) {
         this.level = level;
-        this.field = generateField(size.getWidth(), size.getHeight(),level);
+        this.field = generateField(size.getWidth(), size.getHeight(), level);
     }
 
     private static Piece[][] generateField(int width, int height, GameLevel level) {
@@ -89,8 +106,15 @@ public class Game {
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
-                    generatedField[i][j] = new Piece(Math.random() >= 0.5);
+                generatedField[i][j] = new Piece(false);
             }
+        }
+
+        for (int i = 0; i < level.getBombPercent() * width * height; i++) {
+            int x = ThreadLocalRandom.current().nextInt(0, width);
+            int y = ThreadLocalRandom.current().nextInt(0, height);
+
+            generatedField[x][y] = new Piece(true);
         }
 
         return generatedField;
