@@ -195,7 +195,15 @@ public class Game {
         return count;
     }
 
+    public void unrevealPiece(int posX, int posY) {
+        getPiece(posX, posY).unreveal();
+    }
+
+    private Piece getPiece(int posX, int posY) {
+        return field[posX][posY];
+    }
+
     public boolean isPieceRigged(int posX, int posY) {
-        return field[posX][posY].isRigged();
+        return getPiece(posX, posY).isRigged();
     }
 }
