@@ -57,25 +57,29 @@ public class Game {
     private int width;
     private int height;
 
-    /**
-     * Create new game with prepared sizes.
-     * @param level
-     * @param clock
-     */
-    public Game(FieldSize level, GameClock clock) {
-        this.clock = clock;
-
+    public Game(FieldSize level) {
         this.width = level.getWidth();
         this.height = level.getHeight();
     }
 
-    public Game(GameClock clock, int width, int height) {
-        this.clock = clock;
-
+    public Game(int width, int height) {
         if (width < 0 || height < 0) {
             throw new RuntimeException("Field width and height must be > 0!");
         }
+
         this.width = width;
         this.height = height;
+    }
+
+    public GameClock getClock() {
+        return clock;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }
