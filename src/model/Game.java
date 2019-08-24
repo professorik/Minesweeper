@@ -199,7 +199,7 @@ public class Game {
         return count;
     }
 
-    public void unrevealPiece(int posX, int posY) {
+    public void revealPiece(int posX, int posY) {
         getPiece(posX, posY).reveal();
     }
 
