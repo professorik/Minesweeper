@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+
 <BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="UI.ControllerOfGameTable">
    <top>
       <VBox BorderPane.alignment="CENTER">
@@ -12,9 +15,21 @@
               <menus>
                 <Menu mnemonicParsing="false" text="Settings">
                   <items>
-                    <MenuItem fx:id="setSizes" mnemonicParsing="false" text="Set Sizes" />
-                        <MenuItem fx:id="setBombsQuantity" mnemonicParsing="false" text="Set bombs quantity" />
-                        <MenuItem fx:id="setLevel" mnemonicParsing="false" text="Set level" />
+                    <MenuItem fx:id="setSizes" mnemonicParsing="false" text="Set Custom Param" />
+                        <Menu mnemonicParsing="false" text="Set Level">
+                           <items>
+                              <MenuItem fx:id="easy" mnemonicParsing="false" text="Easy" />
+                              <MenuItem fx:id="medium" mnemonicParsing="false" text="Medium" />
+                              <MenuItem fx:id="hard" mnemonicParsing="false" text="Hard" />
+                           </items>
+                        </Menu>
+                        <Menu mnemonicParsing="false" text="Set Standart Size">
+                           <items>
+                              <MenuItem fx:id="firstLength" mnemonicParsing="false" text="9x9" />
+                              <MenuItem fx:id="secondLength" mnemonicParsing="false" text="16x16" />
+                              <MenuItem fx:id="thirdLength" mnemonicParsing="false" text="30x30" />
+                           </items>
+                        </Menu>
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">

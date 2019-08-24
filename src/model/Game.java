@@ -102,6 +102,10 @@ public class Game {
         this.field = generateField(width, height, level);
     }
 
+    public GameLevel getLevel() {
+        return level;
+    }
+
     private static Piece[][] generateField(int width, int height, GameLevel level) {
         Piece[][] generatedField = new Piece[width][height];
 

@@ -13,6 +13,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Game;
@@ -29,14 +30,23 @@ public class ControllerOfGameTable implements Initializable {
     @FXML
     private MenuItem setSizes;
     @FXML
-    private MenuItem setBombsQuantity;
+    private MenuItem firstLength;
     @FXML
-    private MenuItem setLevel;
+    private MenuItem secondLength;
+    @FXML
+    private MenuItem thirdLength;
+    @FXML
+    private MenuItem easy;
+    @FXML
+    private MenuItem medium;
+    @FXML
+    private MenuItem hard;
+
     @FXML
     private MenuItem getInstruction;
 
 
-    private Piece[][] table = MainOfGameTable.game.getField();
+    private Piece[][] table;
     // private GridPane table;
 
     private int WIDTH = 9;
@@ -44,15 +54,48 @@ public class ControllerOfGameTable implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-       startGame();
+        startGame();
 
         setSizes.setOnAction(event -> showResizeDialog());
-        setBombsQuantity.setOnAction(event -> System.out.println(setBombsQuantity.getText()));
-        setLevel.setOnAction(event -> System.out.println(setLevel.getText()));
+        firstLength.setOnAction(event -> {
+            WIDTH = 9; HEIGHT = 9;
+            MainOfGameTable.game = new Game(WIDTH, HEIGHT, MainOfGameTable.game.getLevel());
+            startGame();
+        });
+        secondLength.setOnAction(event -> {
+            WIDTH = 16; HEIGHT = 16;
+            MainOfGameTable.game = new Game(WIDTH, HEIGHT, MainOfGameTable.game.getLevel());
+            startGame();
+        });
+        thirdLength.setOnAction(event -> {
+            WIDTH = 30; HEIGHT = 30;
+            MainOfGameTable.game = new Game(WIDTH, HEIGHT, MainOfGameTable.game.getLevel());
+            startGame();
+        });
+        easy.setOnAction(event -> {
+            if (!MainOfGameTable.game.getLevel().equals(Game.GameLevel.EASY)) {
+                MainOfGameTable.game = new Game(WIDTH, HEIGHT, Game.GameLevel.EASY);
+                startGame();
+            }
+        });
+        medium.setOnAction(event -> {
+            if (!MainOfGameTable.game.getLevel().equals(Game.GameLevel.MEDIUM)) {
+                MainOfGameTable.game = new Game(WIDTH, HEIGHT, Game.GameLevel.MEDIUM);
+                startGame();
+            }
+        });
+        hard.setOnAction(event -> {
+            if (!MainOfGameTable.game.getLevel().equals(Game.GameLevel.HARD)) {
+                MainOfGameTable.game = new Game(WIDTH, HEIGHT, Game.GameLevel.HARD);
+                startGame();
+            }
+        });
         getInstruction.setOnAction(event -> System.out.println(getInstruction.getText()));
     }
 
-    private void startGame(){
+    private void startGame() {
+        table = MainOfGameTable.game.getField();
+
         GridPane root = new GridPane();
         root.setGridLinesVisible(true);
 
@@ -63,8 +106,8 @@ public class ControllerOfGameTable implements Initializable {
                 AnchorPane pane2 = new AnchorPane();
                 VBox pane = new VBox();
                 pane.setFillWidth(true);
-                pane.setPrefWidth(40);
-                pane.setPrefHeight(40);
+                pane.setPrefWidth((9 * 40)/WIDTH);
+                pane.setPrefHeight((9 * 40)/HEIGHT);
                 // pane.getChildren().add(new Label("0"));
 
                 Button button = new Button();
@@ -75,7 +118,7 @@ public class ControllerOfGameTable implements Initializable {
                 button.setMaxHeight(Double.MAX_VALUE);
                 button.setMaxWidth(Double.MAX_VALUE);
 
-                Label label = new Label(table[i][j].isRigged()? "1" : "0");
+                Label label = new Label(table[i][j].isRigged() ? "1" : "0");
                 label.setVisible(false);
                 //label.setAlignment(Pos.CENTER);
                 label.setTranslateX(12.5);
@@ -90,6 +133,11 @@ public class ControllerOfGameTable implements Initializable {
             }
         }
 
+       // borderPane.setMaxSize(1000 , 800);
+        //borderPane.setMinSize(1000, 800);
+        //borderPane.setScaleX(1000);
+       // borderPane.setPrefHeight(100);
+       // borderPane.getScene().setFill(Color.BLACK);
         borderPane.setCenter(root);
     }
 
@@ -146,7 +194,7 @@ public class ControllerOfGameTable implements Initializable {
             if (inputX.getText().length() * inputY.getText().length() > 0) {
                 WIDTH = Integer.valueOf(inputX.getText());
                 HEIGHT = Integer.valueOf(inputY.getText());
-                MainOfGameTable.game = new Game(WIDTH , HEIGHT , Game.GameLevel.EASY);
+                MainOfGameTable.game = new Game(WIDTH, HEIGHT, MainOfGameTable.game.getLevel());
                 startGame();
             }
             dialogStage.close();
