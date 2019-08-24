@@ -26,8 +26,10 @@ public class Main extends Application {
 //        final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 //        scheduler.scheduleAtFixedRate(() -> System.out.println(clock.getElapsedTimeMillis() / 1000), 1, 1, TimeUnit.SECONDS);
 
-        Game game = new Game(Game.FieldSize.EASY, Game.GameLevel.EASY);
+        Game game = new Game(Game.FieldSize.EASY, Game.GameLevel.HARD);
         System.out.println(game.fieldString());
+
+        System.out.println(game.getSurroundingBombCount(0,0));
     }
 
 

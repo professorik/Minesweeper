@@ -92,10 +92,14 @@ public class Game {
 
     private GameLevel level;
     private Piece[][] field;
+    private int width;
+    private int height;
 
     public Game(FieldSize size, GameLevel level) {
         this.level = level;
-        this.field = generateField(size.getWidth(), size.getHeight(), level);
+        this.height = size.getHeight();
+        this.width = size.getWidth();
+        this.field = generateField(width, height, level);
     }
 
     private static Piece[][] generateField(int width, int height, GameLevel level) {
@@ -128,7 +132,70 @@ public class Game {
 
         this.level = level;
 
+        this.height = height;
+        this.width = width;
         this.field = generateField(width, height, level);
     }
 
+    public int getSurroundingBombCount (int posX, int posY) {
+        int count = 0;
+
+        if (posX < 0 || posX > width || posY < 0 || posY > height) {
+            throw new RuntimeException("Invalid coordinates!");
+        }
+
+        //upper row
+        if (posX > 0 && posY > 0) {
+            if (isPieceRigged(posX - 1, posY - 1)) {
+                count++;
+            }
+        }
+
+        if (posY > 0) {
+            if (isPieceRigged(posX, posY - 1)) {
+                count++;
+            }
+        }
+
+        if (posX < width && posY > 0) {
+            if (isPieceRigged(posX + 1, posY - 1)) {
+                count++;
+            }
+        }
+        //this row
+        if (posX > 0) {
+            if (isPieceRigged(posX - 1, posY)) {
+                count++;
+            }
+        }
+
+        if (posX < width) {
+            if (isPieceRigged(posX + 1, posY)) {
+                count++;
+            }
+        }
+        //next row
+        if (posX > 0 && posY < height) {
+            if (isPieceRigged(posX - 1, posY + 1)) {
+                count++;
+            }
+        }
+
+        if (posY < height) {
+            if (isPieceRigged(posX, posY + 1)) {
+                count++;
+            }
+        }
+
+        if (posX < width && posY < height) {
+            if (isPieceRigged(posX + 1, posY + 1)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public boolean isPieceRigged(int posX, int posY) {
+        return field[posX][posY].isRigged();
+    }
 }
