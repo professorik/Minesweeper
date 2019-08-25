@@ -47,6 +47,8 @@ public class ControllerOfGameTable implements Initializable {
     @FXML
     private MenuItem getInstruction;
 
+    @FXML
+    private HBox hat;
 
     private Piece[][] table;
     // private GridPane table;
@@ -59,9 +61,13 @@ public class ControllerOfGameTable implements Initializable {
 
     private ScrollPane scrollPane;
 
+    private int count = 0;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         startGame();
+
+
 
         setSizes.setOnAction(event -> showResizeDialog());
         firstLength.setOnAction(event -> {
@@ -181,6 +187,11 @@ public class ControllerOfGameTable implements Initializable {
                             borderPane.setBottom(label);
                         }else {
                             cleanFromZero(index, root);
+                            ++count;
+                            if (MainOfGameTable.game.getTotalBombCount() == WIDTH * HEIGHT - count){
+                                Label label = new Label("You win!");
+                                borderPane.setBottom(label);
+                            }
                             button.setVisible(false);
                             imageView.setVisible(true);
                         }
