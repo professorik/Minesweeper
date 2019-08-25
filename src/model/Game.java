@@ -142,6 +142,8 @@ public class Game {
 
         this.height = height;
         this.width = width;
+        this.totalBombCount = (int) (level.getBombPercent() * width * height);
+
         this.field = generateField(width, height, level);
     }
 
