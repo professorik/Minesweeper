@@ -18,11 +18,14 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Game;
 import model.Piece;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -77,7 +80,6 @@ public class ControllerOfGameTable implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         startGame();
 
-
         setSizes.setOnAction(event -> showResizeDialog());
         firstLength.setOnAction(event -> {
             WIDTH = 9;
@@ -115,11 +117,12 @@ public class ControllerOfGameTable implements Initializable {
                 startGame();
             }
         });
-        getInstruction.setOnAction(event -> System.out.println(getInstruction.getText()));
+        getInstruction.setOnAction(event -> showInstructionDialog());
     }
 
     private void startGame() {
         hat.getChildren().clear();
+
         node = null;
         try {
             node = FXMLLoader.load(getClass().getResource("/UI/timer.fxml"));
@@ -130,6 +133,7 @@ public class ControllerOfGameTable implements Initializable {
 
         ImageView flag = new ImageView(new Image("flag2.png" , 64 ,64 , true, true , false));
         restart = new Button();
+        restart.setOnAction(event -> startGame());
         restart.setGraphic(new ImageView(new Image("smiling.png" , 64 , 64 ,true, true, false)));
         countOfFlags = new Label(String.valueOf(cFlags)); countOfFlags.setFont(Font.font(50));
         hat.getChildren().addAll(flag , countOfFlags, restart, node);
@@ -306,6 +310,48 @@ public class ControllerOfGameTable implements Initializable {
             }
             dialogStage.close();
         });
+
+        dialogStage.setScene(new Scene(vBox));
+        dialogStage.show();
+    }
+
+    private void showInstructionDialog() {
+        final Stage dialogStage = new Stage();
+        dialogStage.setResizable(false);
+        dialogStage.initModality(Modality.APPLICATION_MODAL);
+        dialogStage.setTitle("Instruction");
+        dialogStage.getIcons().add(new Image("document.png"));
+
+        Button noBtn = new Button("Cancel");
+
+        noBtn.setOnAction(event -> dialogStage.close());
+
+        TextArea textArea = new TextArea();
+        textArea.setEditable(false);
+        textArea.setMinHeight(400);
+
+        try (FileReader reader = new FileReader("res\\instruction.txt")) {
+            int c;
+            String kar = "";
+            while ((c = reader.read()) != -1) {
+                kar += String.valueOf((char) c);
+            }
+            textArea.setText(kar);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.BASELINE_CENTER);
+        hBox.setSpacing(10.0);
+        hBox.getChildren().addAll(noBtn);
+
+        VBox vBox = new VBox();
+        vBox.setSpacing(10.0);
+        vBox.getChildren().addAll(textArea , hBox);
+        vBox.setPadding(new Insets(10, 10, 0, 10));
 
         dialogStage.setScene(new Scene(vBox));
         dialogStage.show();
