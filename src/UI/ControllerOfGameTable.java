@@ -1,5 +1,6 @@
 package UI;
 
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -10,6 +11,8 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -105,17 +108,6 @@ public class ControllerOfGameTable implements Initializable {
         double size = Math.min(fieldWIDTH, fieldHEIGHT);
         size = Math.max(size , minSizes);
 
-        //root.setMaxWidth((40 * WIDTH)/ 9);
-       // root.setMaxHeight((40 * HEIGHT) / 9);
-       // root.setVgap(10);
-        /*System.out.println(size);
-
-        for (int i = 0; i < table.length; i++) {
-            for (int j = 0; j < table[i].length; j++) {
-                System.out.print(table[i][j].isRigged() ? 1 : 0);
-            }
-            System.out.println();
-        }*/
         for (int i = 0; i < WIDTH; i++) {
             root.getRowConstraints().add(new RowConstraints(size));
 
@@ -158,10 +150,19 @@ public class ControllerOfGameTable implements Initializable {
                 imageView.setFitWidth(size);
                 imageView.setFitHeight(size);
 
-                button.setOnAction(event -> {
+                Image smile = new Image("flag2.png" , size/2 , size/2, true, true, true);
+                button.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+                    if (mouseEvent.getButton() == MouseButton.SECONDARY){
+                        button.setGraphic(new ImageView(smile));
+                    } else {
+                        button.setVisible(false);
+                        imageView.setVisible(true);
+                    }
+                });
+                /*button.setOnAction(event -> {
                     button.setVisible(false);
                     imageView.setVisible(true);
-                });
+                });*/
                 root.add(pane2, j, i);
             }
         }
