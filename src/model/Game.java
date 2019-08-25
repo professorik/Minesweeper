@@ -201,7 +201,10 @@ public class Game {
     }
 
     public void revealPiece(int posX, int posY) {
-        getPiece(posX, posY).reveal();
+        Piece piece = getPiece(posX, posY);
+        if (!piece.isFlagged()) {
+            piece.reveal();
+        }
     }
 
     private Piece getPiece(int posX, int posY) {
