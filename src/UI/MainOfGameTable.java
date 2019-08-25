@@ -15,7 +15,7 @@ public class MainOfGameTable extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/UI/app.fxml"));
         primaryStage.setTitle("Minesweeper");
         primaryStage.getIcons().add(new Image("bomb.png"));
-        primaryStage.setScene(new Scene(root, 800, 1000));
+        primaryStage.setScene(new Scene(root, 745, 900));
         primaryStage.show();
     }
 

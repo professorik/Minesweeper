@@ -50,6 +50,8 @@ public class ControllerOfGameTable implements Initializable {
     private MenuItem medium;
     @FXML
     private MenuItem hard;
+    @FXML
+    private MenuItem newGame;
 
     @FXML
     private MenuItem getInstruction;
@@ -118,10 +120,12 @@ public class ControllerOfGameTable implements Initializable {
             }
         });
         getInstruction.setOnAction(event -> showInstructionDialog());
+        newGame.setOnAction(event -> startGame());
     }
 
     private void startGame() {
         hat.getChildren().clear();
+        was = new ArrayList<>();
 
         node = null;
         try {
@@ -131,13 +135,22 @@ public class ControllerOfGameTable implements Initializable {
         }
         node.setPickOnBounds(true);
 
+        HBox pane0 = new HBox();
+        HBox pane1 = new HBox();
+
         ImageView flag = new ImageView(new Image("flag2.png" , 64 ,64 , true, true , false));
-        restart = new Button();
+        ImageView clock = new ImageView(new Image("clock.png" , 64 ,64 , true, true , false));
+        restart = new Button(); restart.setFocusTraversable(false);
         restart.setOnAction(event -> startGame());
         restart.setGraphic(new ImageView(new Image("smiling.png" , 64 , 64 ,true, true, false)));
         countOfFlags = new Label(String.valueOf(cFlags)); countOfFlags.setFont(Font.font(50));
-        hat.getChildren().addAll(flag , countOfFlags, restart, node);
-        hat.setPadding(new Insets( 15 , 0 ,0 , 0));
+
+        pane0.getChildren().addAll(flag, countOfFlags);
+        pane1.getChildren().addAll(clock, node);
+
+        hat.getChildren().addAll(pane0, restart, pane1);
+        hat.setSpacing(240 / String.valueOf(cFlags).length());
+        hat.setPadding(new Insets( 15 , 50 ,0 , 50));
 
         cFlags = MainOfGameTable.game.getTotalBombCount();
         countOfFlags.setText(String.valueOf(cFlags));
@@ -145,6 +158,11 @@ public class ControllerOfGameTable implements Initializable {
         table = MainOfGameTable.game.getField();
 
         GridPane root = new GridPane();
+        if (WIDTH < 16 && HEIGHT < 16){
+            root.setTranslateX(1080 / WIDTH);
+            root.setTranslateY(1080 / HEIGHT);
+        }
+
         root.setGridLinesVisible(true);
 
         double fieldWIDTH = (18 * 40.0 * (Math.log10(WIDTH) / Math.log10(30))) / WIDTH;
@@ -248,8 +266,8 @@ public class ControllerOfGameTable implements Initializable {
             restart.setGraphic(new ImageView(new Image("sad.png" , 64 , 64 ,true, true, false)));
         }
         Label score = new Label(((Label)node.getChildrenUnmodifiable().get(0)).getText()); score.setFont(Font.font(50));
-        hat.getChildren().remove(node);
-        hat.getChildren().add(score);
+        ((HBox)hat.getChildren().get(2)).getChildren().remove(node);
+        ((HBox)hat.getChildren().get(2)).getChildren().add(score);
     }
 
     private void showResizeDialog() {
