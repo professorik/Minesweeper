@@ -7,10 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -55,6 +52,9 @@ public class ControllerOfGameTable implements Initializable {
 
     private int WIDTH =30;
     private int HEIGHT = 30;
+    private final double minSizes = 20;
+
+    private ScrollPane scrollPane;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -107,22 +107,27 @@ public class ControllerOfGameTable implements Initializable {
         double fieldHEIGHT = (18 * 40.0 * (Math.log10(HEIGHT) / Math.log10(30)))/HEIGHT;
 
         double size = Math.min(fieldWIDTH, fieldHEIGHT);
+        size = Math.max(size , minSizes);
 
         //root.setMaxWidth((40 * WIDTH)/ 9);
        // root.setMaxHeight((40 * HEIGHT) / 9);
        // root.setVgap(10);
-        System.out.println(size);
+        /*System.out.println(size);
 
         for (int i = 0; i < table.length; i++) {
             for (int j = 0; j < table[i].length; j++) {
                 System.out.print(table[i][j].isRigged() ? 1 : 0);
             }
             System.out.println();
-        }
-        for (int i = 0; i < HEIGHT; i++) {
+        }*/
+        for (int i = 0; i < WIDTH; i++) {
             root.getRowConstraints().add(new RowConstraints(size));
-            root.getColumnConstraints().add(new ColumnConstraints(size));
-            for (int j = 0; j < WIDTH; j++) {
+
+            if (i < HEIGHT) {
+                root.getColumnConstraints().add(new ColumnConstraints(size));
+            }
+
+            for (int j = 0; j < HEIGHT; j++) {
                 boolean fl = table[i][j].isRigged();
 
                 AnchorPane pane2 = new AnchorPane();
@@ -157,6 +162,10 @@ public class ControllerOfGameTable implements Initializable {
                 label.setTranslateY(12.5 * size / 40);
 
                 pane2.getChildren().addAll(pane, label, imageView);
+
+                imageView.setFitWidth(size);
+                imageView.setFitHeight(size);
+
                 button.setOnAction(event -> {
                     button.setVisible(false);
                     if (fl){
@@ -174,7 +183,9 @@ public class ControllerOfGameTable implements Initializable {
         //borderPane.setScaleX(1000);
        // borderPane.setPrefHeight(100);
        // borderPane.getScene().setFill(Color.BLACK);
-        borderPane.setCenter(root);
+        scrollPane = new ScrollPane(root);
+        root.setPadding(new Insets(10 , 10 , 10 , 10));
+        borderPane.setCenter(scrollPane);
     }
 
     private void showResizeDialog() {
@@ -228,8 +239,8 @@ public class ControllerOfGameTable implements Initializable {
 
         yesBtn.setOnAction(event -> {
             if (inputX.getText().length() * inputY.getText().length() > 0) {
-                WIDTH = Integer.valueOf(inputX.getText());
-                HEIGHT = Integer.valueOf(inputY.getText());
+                WIDTH = Integer.valueOf(inputY.getText());
+                HEIGHT = Integer.valueOf(inputX.getText());
                 MainOfGameTable.game = new Game(WIDTH, HEIGHT, MainOfGameTable.game.getLevel());
                 startGame();
             }
