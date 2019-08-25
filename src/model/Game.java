@@ -70,26 +70,17 @@ public class Game {
     }
 
     public enum GameLevel {
-        EASY {
-            @Override
-            public float getBombPercent() {
-                return 0.1234f;
-            }
-        },
-        MEDIUM {
-            @Override
-            public float getBombPercent() {
-                return 0.246f;
-            }
-        },
-        HARD {
-            @Override
-            public float getBombPercent() {
-                return 0.34f;
-            }
-        };
+        EASY(0.1234f),
+        MEDIUM(0.246f),
+        HARD(0.34f);
 
-        public abstract float getBombPercent();
+        private float bombPercent;
+        GameLevel(float bombPercent) {
+            this.bombPercent = bombPercent;
+        }
+        public float getBombPercent() {
+            return bombPercent;
+        }
     }
 
     private GameLevel level;
@@ -210,7 +201,10 @@ public class Game {
     }
 
     public void revealPiece(int posX, int posY) {
-        getPiece(posX, posY).reveal();
+        Piece piece = getPiece(posX, posY);
+        if (!piece.isFlagged()) {
+            piece.reveal();
+        }
     }
 
     private Piece getPiece(int posX, int posY) {
