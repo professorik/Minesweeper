@@ -5,6 +5,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Game {
 
+    private int totalBombCount;
+
     public String fieldString() {
         StringBuilder stringBuilder = new StringBuilder();
 
@@ -100,13 +102,15 @@ public class Game {
         this.height = size.getHeight();
         this.width = size.getWidth();
         this.field = generateField(width, height, level);
+
+        this.totalBombCount = (int) (level.getBombPercent() * width * height);
     }
 
     public GameLevel getLevel() {
         return level;
     }
 
-    private static Piece[][] generateField(int width, int height, GameLevel level) {
+    private Piece[][] generateField(int width, int height, GameLevel level) {
         Piece[][] generatedField = new Piece[width][height];
 
         for (int i = 0; i < width; i++) {
@@ -115,7 +119,7 @@ public class Game {
             }
         }
 
-        for (int i = 0; i < level.getBombPercent() * width * height; i++) {
+        for (int i = 0; i < totalBombCount; i++) {
             int x = ThreadLocalRandom.current().nextInt(0, width);
             int y = ThreadLocalRandom.current().nextInt(0, height);
 
@@ -139,6 +143,10 @@ public class Game {
         this.height = height;
         this.width = width;
         this.field = generateField(width, height, level);
+    }
+
+    public int getTotalBombCount() {
+        return totalBombCount;
     }
 
     public int getSurroundingBombCount (int posX, int posY) {
