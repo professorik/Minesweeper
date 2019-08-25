@@ -119,7 +119,7 @@ public class Game {
             int x = ThreadLocalRandom.current().nextInt(0, width);
             int y = ThreadLocalRandom.current().nextInt(0, height);
 
-            generatedField[y][x] = new Piece(true);
+            generatedField[x][y] = new Piece(true);
         }
 
         return generatedField;
@@ -204,7 +204,7 @@ public class Game {
     }
 
     private Piece getPiece(int posX, int posY) {
-        return field[posY][posX];
+        return field[posX][posY];
     }
 
     public boolean isPieceRigged(int posX, int posY) {
