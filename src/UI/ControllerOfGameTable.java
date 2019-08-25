@@ -169,6 +169,15 @@ public class ControllerOfGameTable implements Initializable {
                         button.setGraphic(new ImageView(smile));
                         solve(root);
                     } else {
+                        if (fl){
+                            for (int k = 0; k < WIDTH; k++) {
+                                for (int l = 0; l < HEIGHT; l++) {
+                                      clearIndex(root, k * HEIGHT + l);
+                                }
+                            }
+                            Label label = new Label("You lose");
+                            borderPane.setBottom(label);
+                        }
                         button.setVisible(false);
                         imageView.setVisible(true);
                         //was.add(index);
