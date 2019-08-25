@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -20,6 +21,7 @@ import model.Game;
 import model.Piece;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class ControllerOfGameTable implements Initializable {
@@ -49,9 +51,11 @@ public class ControllerOfGameTable implements Initializable {
     private Piece[][] table;
     // private GridPane table;
 
-    private int WIDTH =30;
+    private int WIDTH = 30;
     private int HEIGHT = 30;
     private final double minSizes = 20;
+
+    ArrayList<Integer> was = new ArrayList<>();
 
     private ScrollPane scrollPane;
 
@@ -61,17 +65,20 @@ public class ControllerOfGameTable implements Initializable {
 
         setSizes.setOnAction(event -> showResizeDialog());
         firstLength.setOnAction(event -> {
-            WIDTH = 9; HEIGHT = 9;
+            WIDTH = 9;
+            HEIGHT = 9;
             MainOfGameTable.game = new Game(WIDTH, HEIGHT, MainOfGameTable.game.getLevel());
             startGame();
         });
         secondLength.setOnAction(event -> {
-            WIDTH = 16; HEIGHT = 16;
+            WIDTH = 16;
+            HEIGHT = 16;
             MainOfGameTable.game = new Game(WIDTH, HEIGHT, MainOfGameTable.game.getLevel());
             startGame();
         });
         thirdLength.setOnAction(event -> {
-            WIDTH = 30; HEIGHT = 30;
+            WIDTH = 30;
+            HEIGHT = 30;
             MainOfGameTable.game = new Game(WIDTH, HEIGHT, MainOfGameTable.game.getLevel());
             startGame();
         });
@@ -99,14 +106,21 @@ public class ControllerOfGameTable implements Initializable {
     private void startGame() {
         table = MainOfGameTable.game.getField();
 
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
+                System.out.print(table[i][j].isRigged()? "b" : MainOfGameTable.game.getSurroundingBombCount(i , j));
+            }
+            System.out.println();
+        }
+
         GridPane root = new GridPane();
         root.setGridLinesVisible(true);
 
-        double fieldWIDTH = (18 * 40.0 * (Math.log10(WIDTH) / Math.log10(30)))/WIDTH;
-        double fieldHEIGHT = (18 * 40.0 * (Math.log10(HEIGHT) / Math.log10(30)))/HEIGHT;
+        double fieldWIDTH = (18 * 40.0 * (Math.log10(WIDTH) / Math.log10(30))) / WIDTH;
+        double fieldHEIGHT = (18 * 40.0 * (Math.log10(HEIGHT) / Math.log10(30))) / HEIGHT;
 
         double size = Math.min(fieldWIDTH, fieldHEIGHT);
-        size = Math.max(size , minSizes);
+        size = Math.max(size, minSizes);
 
         for (int i = 0; i < WIDTH; i++) {
             root.getRowConstraints().add(new RowConstraints(size));
@@ -117,7 +131,6 @@ public class ControllerOfGameTable implements Initializable {
 
             for (int j = 0; j < HEIGHT; j++) {
                 boolean fl = table[i][j].isRigged();
-
                 AnchorPane pane2 = new AnchorPane();
                 VBox pane = new VBox();
                 pane.setFillWidth(true);
@@ -137,9 +150,9 @@ public class ControllerOfGameTable implements Initializable {
                 button.setMaxWidth(Double.MAX_VALUE);
 
                 Image image;
-                if (!fl){
-                    image = new Image(MainOfGameTable.game.getSurroundingBombCount(i , j) + ".png", size, size, true, true, true);
-                }else{
+                if (!fl) {
+                    image = new Image(MainOfGameTable.game.getSurroundingBombCount(i, j) + ".png", size, size, true, true, true);
+                } else {
                     image = new Image("bomb.png", size, size, true, true, true);
                 }
                 ImageView imageView = new ImageView(image);
@@ -150,25 +163,22 @@ public class ControllerOfGameTable implements Initializable {
                 imageView.setFitWidth(size);
                 imageView.setFitHeight(size);
 
-                Image smile = new Image("flag2.png" , size/2 , size/2, true, true, true);
+                Image smile = new Image("flag2.png", size / 2, size / 2, true, true, true);
                 button.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-                    if (mouseEvent.getButton() == MouseButton.SECONDARY){
+                    if (mouseEvent.getButton() == MouseButton.SECONDARY) {
                         button.setGraphic(new ImageView(smile));
+                        solve(root);
                     } else {
                         button.setVisible(false);
                         imageView.setVisible(true);
                     }
                 });
-                /*button.setOnAction(event -> {
-                    button.setVisible(false);
-                    imageView.setVisible(true);
-                });*/
                 root.add(pane2, j, i);
             }
         }
 
         scrollPane = new ScrollPane(root);
-        root.setPadding(new Insets(10 , 10 , 10 , 10));
+        root.setPadding(new Insets(10, 10, 10, 10));
         borderPane.setCenter(scrollPane);
     }
 
@@ -233,5 +243,159 @@ public class ControllerOfGameTable implements Initializable {
 
         dialogStage.setScene(new Scene(vBox));
         dialogStage.show();
+    }
+
+    private void solve(GridPane gridPane) {
+        // int temp = WIDTH;
+        /// WIDTH = HEIGHT;
+        //  HEIGHT = temp;
+        ArrayList<Integer> stack = new ArrayList<>();
+        stack.add((int) (Math.random() * WIDTH * HEIGHT));
+        int y = (int) Math.floor(((double) stack.get(0)) / HEIGHT);
+        int x = stack.get(0) % HEIGHT;
+        while (!table[y][x].isRigged()) {
+            clearIndex(gridPane, stack.get(0));
+            int count = MainOfGameTable.game.getSurroundingBombCount(y, x);
+            System.out.println(stack.get(0));
+            if (count == 0) {
+                if (x > 0 && x < HEIGHT - 1) {
+                    if (y > 0 && y < HEIGHT - 1) {
+                        clearIndex(gridPane, stack.get(0) - WIDTH - 1);
+                        clearIndex(gridPane, stack.get(0) - WIDTH);
+                        clearIndex(gridPane, stack.get(0) - WIDTH + 1);
+                        clearIndex(gridPane, stack.get(0) + 1);
+                        clearIndex(gridPane, stack.get(0) - 1);
+                        clearIndex(gridPane, stack.get(0) + WIDTH - 1);
+                        clearIndex(gridPane, stack.get(0) + WIDTH);
+                        clearIndex(gridPane, stack.get(0) + WIDTH + 1);
+
+                        stack.add(stack.get(0) + WIDTH + 1);
+                        stack.add(stack.get(0) + WIDTH);
+                        stack.add(stack.get(0) + WIDTH - 1);
+                        stack.add(stack.get(0) - WIDTH + 1);
+                        stack.add(stack.get(0) - WIDTH);
+                        stack.add(stack.get(0) - WIDTH - 1);
+                        stack.add(stack.get(0) + 1);
+                        stack.add(stack.get(0) - 1);
+                    } else if (y == 0) {
+                        clearIndex(gridPane, stack.get(0) + 1);
+                        clearIndex(gridPane, stack.get(0) - 1);
+                        clearIndex(gridPane, stack.get(0) + WIDTH - 1);
+                        clearIndex(gridPane, stack.get(0) + WIDTH);
+                        clearIndex(gridPane, stack.get(0) + WIDTH + 1);
+
+                        stack.add(stack.get(0) + 1);
+                        stack.add(stack.get(0) - 1);
+                        stack.add(stack.get(0) + WIDTH - 1);
+                        stack.add(stack.get(0) + WIDTH);
+                        stack.add(stack.get(0) + WIDTH + 1);
+                    } else {
+                        clearIndex(gridPane, stack.get(0) - WIDTH - 1);
+                        clearIndex(gridPane, stack.get(0) - WIDTH);
+                        clearIndex(gridPane, stack.get(0) - WIDTH + 1);
+                        clearIndex(gridPane, stack.get(0) + 1);
+                        clearIndex(gridPane, stack.get(0) - 1);
+
+                        stack.add(stack.get(0) - WIDTH - 1);
+                        stack.add(stack.get(0) - WIDTH);
+                        stack.add(stack.get(0) - WIDTH + 1);
+                        stack.add(stack.get(0) + 1);
+                        stack.add(stack.get(0) - 1);
+                    }
+                } else if (x == 0) {
+                    if (y > 0 && y < HEIGHT - 1) {
+                        clearIndex(gridPane, stack.get(0) - WIDTH);
+                        clearIndex(gridPane, stack.get(0) - WIDTH + 1);
+                        clearIndex(gridPane, stack.get(0) + 1);
+                        clearIndex(gridPane, stack.get(0) + WIDTH);
+                        clearIndex(gridPane, stack.get(0) + WIDTH + 1);
+
+                        stack.add(stack.get(0) - WIDTH);
+                        stack.add(stack.get(0) - WIDTH + 1);
+                        stack.add(stack.get(0) + 1);
+                        stack.add(stack.get(0) + WIDTH);
+                        stack.add(stack.get(0) + WIDTH + 1);
+                    } else if (y == 0) {
+                        clearIndex(gridPane, stack.get(0) + 1);
+                        clearIndex(gridPane, stack.get(0) + WIDTH);
+                        clearIndex(gridPane, stack.get(0) + WIDTH + 1);
+
+                        stack.add(stack.get(0) + 1);
+                        stack.add(stack.get(0) + WIDTH);
+                        stack.add(stack.get(0) + WIDTH + 1);
+                    } else {
+                        clearIndex(gridPane, stack.get(0) - WIDTH);
+                        clearIndex(gridPane, stack.get(0) - WIDTH + 1);
+                        clearIndex(gridPane, stack.get(0) + 1);
+
+                        stack.add(stack.get(0) - WIDTH);
+                        stack.add(stack.get(0) - WIDTH + 1);
+                        stack.add(stack.get(0) + 1);
+                    }
+                } else {
+                    if (y > 0 && y < HEIGHT - 1) {
+                        clearIndex(gridPane, stack.get(0) - WIDTH - 1);
+                        clearIndex(gridPane, stack.get(0) - WIDTH);
+                        clearIndex(gridPane, stack.get(0) - 1);
+                        clearIndex(gridPane, stack.get(0) + WIDTH - 1);
+                        clearIndex(gridPane, stack.get(0) + WIDTH);
+
+                        stack.add(stack.get(0) - WIDTH - 1);
+                        stack.add(stack.get(0) - WIDTH);
+                        stack.add(stack.get(0) - 1);
+                        stack.add(stack.get(0) + WIDTH - 1);
+                        stack.add(stack.get(0) + WIDTH);
+                    } else if (y == 0) {
+                        clearIndex(gridPane, stack.get(0) - 1);
+                        clearIndex(gridPane, stack.get(0) + WIDTH - 1);
+                        clearIndex(gridPane, stack.get(0) + WIDTH);
+
+                        stack.add(stack.get(0) - 1);
+                        stack.add(stack.get(0) + WIDTH - 1);
+                        stack.add(stack.get(0) + WIDTH);
+                    } else {
+                        clearIndex(gridPane, stack.get(0) - WIDTH - 1);
+                        clearIndex(gridPane, stack.get(0) - WIDTH);
+                        clearIndex(gridPane, stack.get(0) - 1);
+
+                        stack.add(stack.get(0) - WIDTH - 1);
+                        stack.add(stack.get(0) - WIDTH);
+                        stack.add(stack.get(0) - 1);
+                    }
+                }
+            } else if (count == 8) {
+                stack.set(0, (int) (Math.random() * WIDTH * HEIGHT));
+            }
+
+            was.add(stack.get(0));
+            stack.remove(0);
+            if (was.size() *stack.size() > 0) {
+                while (was.indexOf(stack.get(0)) != -1) {
+                    if (stack.size() == 1) {
+                        stack.remove(0);
+                        break;
+                    } else {
+                        stack.remove(0);
+                    }
+                }
+            }
+            if (stack.size() == 0) {
+                stack.add((int) (Math.random() * WIDTH * HEIGHT));
+            }
+            y = (int) Math.floor(((double) stack.get(0)) / HEIGHT);
+            x = stack.get(0) % HEIGHT;
+        }
+    }
+
+    private void clearIndex(GridPane gridPane, int index) {
+        try {
+            AnchorPane anchorPane = (AnchorPane) gridPane.getChildren().get(index + 1);
+            VBox vBox = (VBox) anchorPane.getChildren().get(0);
+            ImageView imageView = (ImageView) anchorPane.getChildren().get(1);
+            imageView.setVisible(true);
+            vBox.getChildren().get(0).setVisible(false);
+        } catch (IndexOutOfBoundsException e) {
+            return;
+        }
     }
 }
