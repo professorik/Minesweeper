@@ -1,6 +1,5 @@
 package UI;
 
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,10 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Game;
@@ -139,7 +135,6 @@ public class ControllerOfGameTable implements Initializable {
                 pane.setPrefHeight(size);
                 pane.setMaxHeight(size);
                 pane.setMaxWidth(size);
-                // pane.getChildren().add(new Label("0"));
 
                 Button button = new Button();
                 pane.getChildren().add(button);
@@ -149,40 +144,28 @@ public class ControllerOfGameTable implements Initializable {
                 button.setMaxHeight(Double.MAX_VALUE);
                 button.setMaxWidth(Double.MAX_VALUE);
 
-                Label label = new Label("" + MainOfGameTable.game.getSurroundingBombCount(i , j));
-                label.setVisible(false);
-                Image image = new Image("bomb.png", 24, 24, true, true, true);
+                Image image;
+                if (!fl){
+                    image = new Image(MainOfGameTable.game.getSurroundingBombCount(i , j) + ".png", size, size, true, true, true);
+                }else{
+                    image = new Image("bomb.png", size, size, true, true, true);
+                }
                 ImageView imageView = new ImageView(image);
                 imageView.setVisible(false);
 
-                label.setTranslateX(12.5 * size / 40);
-                label.setTranslateY(12.5 * size / 40);
-                //label.setAlignment(Pos.CENTER);
-                label.setTranslateX(12.5 * size / 40);
-                label.setTranslateY(12.5 * size / 40);
-
-                pane2.getChildren().addAll(pane, label, imageView);
+                pane2.getChildren().addAll(pane, imageView);
 
                 imageView.setFitWidth(size);
                 imageView.setFitHeight(size);
 
                 button.setOnAction(event -> {
                     button.setVisible(false);
-                    if (fl){
-                        imageView.setVisible(true);
-                    }else {
-                        label.setVisible(true);
-                    }
+                    imageView.setVisible(true);
                 });
                 root.add(pane2, j, i);
             }
         }
 
-       // borderPane.setMaxSize(1000 , 800);
-        //borderPane.setMinSize(1000, 800);
-        //borderPane.setScaleX(1000);
-       // borderPane.setPrefHeight(100);
-       // borderPane.getScene().setFill(Color.BLACK);
         scrollPane = new ScrollPane(root);
         root.setPadding(new Insets(10 , 10 , 10 , 10));
         borderPane.setCenter(scrollPane);
