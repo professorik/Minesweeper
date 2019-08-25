@@ -22,7 +22,7 @@ public class Timer implements Initializable {
 
     private int i;
 
-    public static boolean fl = true;
+    //public static boolean fl = true;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -33,7 +33,7 @@ public class Timer implements Initializable {
         anchorPane.getChildren().add(time);
 
         Duration totalDelay = Duration.ZERO;
-        for (i = 0; i < 6000 && fl; ++i) {
+        for (i = 0; i < 6000; ++i) {
             String value = "";
             if (i < 600){
                 value = "0";

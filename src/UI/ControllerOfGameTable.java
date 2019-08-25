@@ -71,24 +71,10 @@ public class ControllerOfGameTable implements Initializable {
     private int cFlags = MainOfGameTable.game.getTotalBombCount();
     private Label countOfFlags;
 
+    private Parent node;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Parent node = null;
-        try {
-            node = FXMLLoader.load(getClass().getResource("/UI/timer.fxml"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        node.setPickOnBounds(true);
-
-        ImageView flag = new ImageView(new Image("flag2.png" , 64 ,64 , true, true , false));
-        restart = new Button();
-        restart.setGraphic(new ImageView(new Image("smiling.png" , 64 , 64 ,true, true, false)));
-        countOfFlags = new Label(String.valueOf(cFlags)); countOfFlags.setFont(Font.font(50));
-        hat.getChildren().addAll(flag , countOfFlags, restart, node);
-        hat.setPadding(new Insets( 15 , 0 ,0 , 0));
-
-
         startGame();
 
 
@@ -133,6 +119,22 @@ public class ControllerOfGameTable implements Initializable {
     }
 
     private void startGame() {
+        hat.getChildren().clear();
+        node = null;
+        try {
+            node = FXMLLoader.load(getClass().getResource("/UI/timer.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        node.setPickOnBounds(true);
+
+        ImageView flag = new ImageView(new Image("flag2.png" , 64 ,64 , true, true , false));
+        restart = new Button();
+        restart.setGraphic(new ImageView(new Image("smiling.png" , 64 , 64 ,true, true, false)));
+        countOfFlags = new Label(String.valueOf(cFlags)); countOfFlags.setFont(Font.font(50));
+        hat.getChildren().addAll(flag , countOfFlags, restart, node);
+        hat.setPadding(new Insets( 15 , 0 ,0 , 0));
+
         cFlags = MainOfGameTable.game.getTotalBombCount();
         countOfFlags.setText(String.valueOf(cFlags));
         count = 0;
@@ -215,17 +217,11 @@ public class ControllerOfGameTable implements Initializable {
                                       clearIndex(root, k * HEIGHT + l);
                                 }
                             }
-                            restart.setGraphic(new ImageView(new Image("sad.png" , 64 , 64 ,true, true, true)));
-                            Label label = new Label("You lose");
-                            //Timer.fl = false;
-                            borderPane.setBottom(label);
+                            stopGame(false);
                         }else {
                             cleanFromZero(index, root);
                             if (MainOfGameTable.game.getTotalBombCount() == WIDTH * HEIGHT - count){
-                                Label label = new Label("You win!");
-                               // Timer.fl = false;
-                                restart.setGraphic(new ImageView(new Image("happy.png" , 64 , 64 ,true, true, true)));
-                                borderPane.setBottom(label);
+                                stopGame(true);
                             }
                             button.setVisible(false);
                             imageView.setVisible(true);
@@ -239,6 +235,17 @@ public class ControllerOfGameTable implements Initializable {
         scrollPane = new ScrollPane(root);
         root.setPadding(new Insets(10, 10, 10, 10));
         borderPane.setCenter(scrollPane);
+    }
+
+    private void stopGame(boolean fl){
+        if (fl){
+            restart.setGraphic(new ImageView(new Image("happy.png" , 64 , 64 ,true, true, true)));
+        }else{
+            restart.setGraphic(new ImageView(new Image("sad.png" , 64 , 64 ,true, true, false)));
+        }
+        Label score = new Label(((Label)node.getChildrenUnmodifiable().get(0)).getText()); score.setFont(Font.font(50));
+        hat.getChildren().remove(node);
+        hat.getChildren().add(score);
     }
 
     private void showResizeDialog() {
