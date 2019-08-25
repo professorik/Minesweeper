@@ -70,26 +70,17 @@ public class Game {
     }
 
     public enum GameLevel {
-        EASY {
-            @Override
-            public float getBombPercent() {
-                return 0.1234f;
-            }
-        },
-        MEDIUM {
-            @Override
-            public float getBombPercent() {
-                return 0.246f;
-            }
-        },
-        HARD {
-            @Override
-            public float getBombPercent() {
-                return 0.34f;
-            }
-        };
+        EASY(0.1234f),
+        MEDIUM(0.246f),
+        HARD(0.34f);
 
-        public abstract float getBombPercent();
+        private float bombPercent;
+        GameLevel(float bombPercent) {
+            this.bombPercent = bombPercent;
+        }
+        public float getBombPercent() {
+            return bombPercent;
+        }
     }
 
     private GameLevel level;
