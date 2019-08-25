@@ -130,6 +130,8 @@ public class ControllerOfGameTable implements Initializable {
             }
 
             for (int j = 0; j < HEIGHT; j++) {
+                int index = i * HEIGHT + j;
+
                 boolean fl = table[i][j].isRigged();
                 AnchorPane pane2 = new AnchorPane();
                 VBox pane = new VBox();
@@ -167,7 +169,7 @@ public class ControllerOfGameTable implements Initializable {
                 button.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
                     if (mouseEvent.getButton() == MouseButton.SECONDARY) {
                         button.setGraphic(new ImageView(smile));
-                        solve(root);
+                     //   solve(root);
                     } else {
                         if (fl){
                             for (int k = 0; k < WIDTH; k++) {
@@ -177,10 +179,11 @@ public class ControllerOfGameTable implements Initializable {
                             }
                             Label label = new Label("You lose");
                             borderPane.setBottom(label);
+                        }else {
+                            cleanFromZero(index, root);
+                            button.setVisible(false);
+                            imageView.setVisible(true);
                         }
-                        button.setVisible(false);
-                        imageView.setVisible(true);
-                        //was.add(index);
                     }
                 });
                 root.add(pane2, j, i);
@@ -253,6 +256,142 @@ public class ControllerOfGameTable implements Initializable {
 
         dialogStage.setScene(new Scene(vBox));
         dialogStage.show();
+    }
+
+    private void cleanFromZero(int index, GridPane gridPane){
+        ArrayList<Integer> stack = new ArrayList<>();
+        stack.add(index);
+        int y = (int) Math.floor(((double) stack.get(0)) / HEIGHT);
+        int x = stack.get(0) % HEIGHT;
+        while (!table[y][x].isRigged()) {
+            clearIndex(gridPane, stack.get(0));
+            int count = MainOfGameTable.game.getSurroundingBombCount(y, x);
+            if (count == 0) {
+                if (x > 0 && x < HEIGHT - 1) {
+                    if (y > 0 && y < HEIGHT - 1) {
+                        clearIndex(gridPane, stack.get(0) - WIDTH - 1);
+                        clearIndex(gridPane, stack.get(0) - WIDTH);
+                        clearIndex(gridPane, stack.get(0) - WIDTH + 1);
+                        clearIndex(gridPane, stack.get(0) + 1);
+                        clearIndex(gridPane, stack.get(0) - 1);
+                        clearIndex(gridPane, stack.get(0) + WIDTH - 1);
+                        clearIndex(gridPane, stack.get(0) + WIDTH);
+                        clearIndex(gridPane, stack.get(0) + WIDTH + 1);
+
+                        stack.add(stack.get(0) + WIDTH + 1);
+                        stack.add(stack.get(0) + WIDTH);
+                        stack.add(stack.get(0) + WIDTH - 1);
+                        stack.add(stack.get(0) - WIDTH + 1);
+                        stack.add(stack.get(0) - WIDTH);
+                        stack.add(stack.get(0) - WIDTH - 1);
+                        stack.add(stack.get(0) + 1);
+                        stack.add(stack.get(0) - 1);
+                    } else if (y == 0) {
+                        clearIndex(gridPane, stack.get(0) + 1);
+                        clearIndex(gridPane, stack.get(0) - 1);
+                        clearIndex(gridPane, stack.get(0) + WIDTH - 1);
+                        clearIndex(gridPane, stack.get(0) + WIDTH);
+                        clearIndex(gridPane, stack.get(0) + WIDTH + 1);
+
+                        stack.add(stack.get(0) + 1);
+                        stack.add(stack.get(0) - 1);
+                        stack.add(stack.get(0) + WIDTH - 1);
+                        stack.add(stack.get(0) + WIDTH);
+                        stack.add(stack.get(0) + WIDTH + 1);
+                    } else {
+                        clearIndex(gridPane, stack.get(0) - WIDTH - 1);
+                        clearIndex(gridPane, stack.get(0) - WIDTH);
+                        clearIndex(gridPane, stack.get(0) - WIDTH + 1);
+                        clearIndex(gridPane, stack.get(0) + 1);
+                        clearIndex(gridPane, stack.get(0) - 1);
+
+                        stack.add(stack.get(0) - WIDTH - 1);
+                        stack.add(stack.get(0) - WIDTH);
+                        stack.add(stack.get(0) - WIDTH + 1);
+                        stack.add(stack.get(0) + 1);
+                        stack.add(stack.get(0) - 1);
+                    }
+                } else if (x == 0) {
+                    if (y > 0 && y < HEIGHT - 1) {
+                        clearIndex(gridPane, stack.get(0) - WIDTH);
+                        clearIndex(gridPane, stack.get(0) - WIDTH + 1);
+                        clearIndex(gridPane, stack.get(0) + 1);
+                        clearIndex(gridPane, stack.get(0) + WIDTH);
+                        clearIndex(gridPane, stack.get(0) + WIDTH + 1);
+
+                        stack.add(stack.get(0) - WIDTH);
+                        stack.add(stack.get(0) - WIDTH + 1);
+                        stack.add(stack.get(0) + 1);
+                        stack.add(stack.get(0) + WIDTH);
+                        stack.add(stack.get(0) + WIDTH + 1);
+                    } else if (y == 0) {
+                        clearIndex(gridPane, stack.get(0) + 1);
+                        clearIndex(gridPane, stack.get(0) + WIDTH);
+                        clearIndex(gridPane, stack.get(0) + WIDTH + 1);
+
+                        stack.add(stack.get(0) + 1);
+                        stack.add(stack.get(0) + WIDTH);
+                        stack.add(stack.get(0) + WIDTH + 1);
+                    } else {
+                        clearIndex(gridPane, stack.get(0) - WIDTH);
+                        clearIndex(gridPane, stack.get(0) - WIDTH + 1);
+                        clearIndex(gridPane, stack.get(0) + 1);
+
+                        stack.add(stack.get(0) - WIDTH);
+                        stack.add(stack.get(0) - WIDTH + 1);
+                        stack.add(stack.get(0) + 1);
+                    }
+                } else {
+                    if (y > 0 && y < HEIGHT - 1) {
+                        clearIndex(gridPane, stack.get(0) - WIDTH - 1);
+                        clearIndex(gridPane, stack.get(0) - WIDTH);
+                        clearIndex(gridPane, stack.get(0) - 1);
+                        clearIndex(gridPane, stack.get(0) + WIDTH - 1);
+                        clearIndex(gridPane, stack.get(0) + WIDTH);
+
+                        stack.add(stack.get(0) - WIDTH - 1);
+                        stack.add(stack.get(0) - WIDTH);
+                        stack.add(stack.get(0) - 1);
+                        stack.add(stack.get(0) + WIDTH - 1);
+                        stack.add(stack.get(0) + WIDTH);
+                    } else if (y == 0) {
+                        clearIndex(gridPane, stack.get(0) - 1);
+                        clearIndex(gridPane, stack.get(0) + WIDTH - 1);
+                        clearIndex(gridPane, stack.get(0) + WIDTH);
+
+                        stack.add(stack.get(0) - 1);
+                        stack.add(stack.get(0) + WIDTH - 1);
+                        stack.add(stack.get(0) + WIDTH);
+                    } else {
+                        clearIndex(gridPane, stack.get(0) - WIDTH - 1);
+                        clearIndex(gridPane, stack.get(0) - WIDTH);
+                        clearIndex(gridPane, stack.get(0) - 1);
+
+                        stack.add(stack.get(0) - WIDTH - 1);
+                        stack.add(stack.get(0) - WIDTH);
+                        stack.add(stack.get(0) - 1);
+                    }
+                }
+            }
+
+            was.add(stack.get(0));
+            stack.remove(0);
+            if (was.size() * stack.size() > 0) {
+                while (was.indexOf(stack.get(0)) != -1) {
+                    if (stack.size() == 1) {
+                        stack.remove(0);
+                        break;
+                    } else {
+                        stack.remove(0);
+                    }
+                }
+            }
+            if (stack.size() == 0) {
+                return;
+            }
+            y = (int) Math.floor(((double) stack.get(0)) / HEIGHT);
+            x = stack.get(0) % HEIGHT;
+        }
     }
 
     private void solve(GridPane gridPane) {
