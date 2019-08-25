@@ -3,10 +3,12 @@ package UI;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -20,6 +22,7 @@ import javafx.stage.Stage;
 import model.Game;
 import model.Piece;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -63,11 +66,26 @@ public class ControllerOfGameTable implements Initializable {
 
     private int count = 0;
 
+    private Button restart;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         startGame();
 
+        Parent node = null;
+        try {
+            node = FXMLLoader.load(getClass().getResource("/UI/timer.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        node.setPickOnBounds(true);
 
+        ImageView flag = new ImageView(new Image("flag2.png" , 64 ,64 , true, true , true));
+        restart = new Button();
+        restart.setGraphic(new ImageView(new Image("smiling.png" , 64 , 64 ,true, true, true)));
+        hat.getChildren().addAll(flag , restart, node);
+
+        hat.setPadding(new Insets( 15 , 0 ,0 , 0));
 
         setSizes.setOnAction(event -> showResizeDialog());
         firstLength.setOnAction(event -> {
@@ -183,13 +201,14 @@ public class ControllerOfGameTable implements Initializable {
                                       clearIndex(root, k * HEIGHT + l);
                                 }
                             }
+                            restart.setGraphic(new ImageView(new Image("sad.png" , 64 , 64 ,true, true, true)));
                             Label label = new Label("You lose");
                             borderPane.setBottom(label);
                         }else {
                             cleanFromZero(index, root);
-                            ++count;
                             if (MainOfGameTable.game.getTotalBombCount() == WIDTH * HEIGHT - count){
                                 Label label = new Label("You win!");
+                                restart.setGraphic(new ImageView(new Image("happy.png" , 64 , 64 ,true, true, true)));
                                 borderPane.setBottom(label);
                             }
                             button.setVisible(false);
@@ -275,6 +294,7 @@ public class ControllerOfGameTable implements Initializable {
         int y = (int) Math.floor(((double) stack.get(0)) / HEIGHT);
         int x = stack.get(0) % HEIGHT;
         while (!table[y][x].isRigged()) {
+            ++count;
             clearIndex(gridPane, stack.get(0));
             int count = MainOfGameTable.game.getSurroundingBombCount(y, x);
             if (count == 0) {
