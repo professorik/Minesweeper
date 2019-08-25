@@ -171,6 +171,7 @@ public class ControllerOfGameTable implements Initializable {
                     } else {
                         button.setVisible(false);
                         imageView.setVisible(true);
+                        //was.add(index);
                     }
                 });
                 root.add(pane2, j, i);
@@ -256,7 +257,7 @@ public class ControllerOfGameTable implements Initializable {
         while (!table[y][x].isRigged()) {
             clearIndex(gridPane, stack.get(0));
             int count = MainOfGameTable.game.getSurroundingBombCount(y, x);
-            System.out.println(stack.get(0));
+           // System.out.println(stack.get(0));
             if (count == 0) {
                 if (x > 0 && x < HEIGHT - 1) {
                     if (y > 0 && y < HEIGHT - 1) {
@@ -365,11 +366,13 @@ public class ControllerOfGameTable implements Initializable {
                 }
             } else if (count == 8) {
                 stack.set(0, (int) (Math.random() * WIDTH * HEIGHT));
+            }else if (count == 1){
+                //TODO
             }
 
             was.add(stack.get(0));
             stack.remove(0);
-            if (was.size() *stack.size() > 0) {
+            if (was.size() * stack.size() > 0) {
                 while (was.indexOf(stack.get(0)) != -1) {
                     if (stack.size() == 1) {
                         stack.remove(0);
