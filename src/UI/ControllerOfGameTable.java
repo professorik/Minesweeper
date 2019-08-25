@@ -17,6 +17,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.Game;
@@ -67,11 +68,11 @@ public class ControllerOfGameTable implements Initializable {
     private int count = 0;
 
     private Button restart;
+    private int cFlags = MainOfGameTable.game.getTotalBombCount();
+    private Label countOfFlags;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        startGame();
-
         Parent node = null;
         try {
             node = FXMLLoader.load(getClass().getResource("/UI/timer.fxml"));
@@ -80,12 +81,16 @@ public class ControllerOfGameTable implements Initializable {
         }
         node.setPickOnBounds(true);
 
-        ImageView flag = new ImageView(new Image("flag2.png" , 64 ,64 , true, true , true));
+        ImageView flag = new ImageView(new Image("flag2.png" , 64 ,64 , true, true , false));
         restart = new Button();
-        restart.setGraphic(new ImageView(new Image("smiling.png" , 64 , 64 ,true, true, true)));
-        hat.getChildren().addAll(flag , restart, node);
-
+        restart.setGraphic(new ImageView(new Image("smiling.png" , 64 , 64 ,true, true, false)));
+        countOfFlags = new Label(String.valueOf(cFlags)); countOfFlags.setFont(Font.font(50));
+        hat.getChildren().addAll(flag , countOfFlags, restart, node);
         hat.setPadding(new Insets( 15 , 0 ,0 , 0));
+
+
+        startGame();
+
 
         setSizes.setOnAction(event -> showResizeDialog());
         firstLength.setOnAction(event -> {
@@ -128,14 +133,10 @@ public class ControllerOfGameTable implements Initializable {
     }
 
     private void startGame() {
+        cFlags = MainOfGameTable.game.getTotalBombCount();
+        countOfFlags.setText(String.valueOf(cFlags));
+        count = 0;
         table = MainOfGameTable.game.getField();
-
-        for (int i = 0; i < WIDTH; i++) {
-            for (int j = 0; j < HEIGHT; j++) {
-                System.out.print(table[i][j].isRigged()? "b" : MainOfGameTable.game.getSurroundingBombCount(i , j));
-            }
-            System.out.println();
-        }
 
         GridPane root = new GridPane();
         root.setGridLinesVisible(true);
@@ -157,6 +158,7 @@ public class ControllerOfGameTable implements Initializable {
                 int index = i * HEIGHT + j;
 
                 boolean fl = table[i][j].isRigged();
+
                 AnchorPane pane2 = new AnchorPane();
                 VBox pane = new VBox();
                 pane.setFillWidth(true);
@@ -189,12 +191,24 @@ public class ControllerOfGameTable implements Initializable {
                 imageView.setFitWidth(size);
                 imageView.setFitHeight(size);
 
-                Image smile = new Image("flag2.png", size / 2, size / 2, true, true, true);
+                Image flagImg = new Image("flag2.png", size / 2, size / 2, true, true, true);
                 button.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+                    int y = (int) Math.floor(((double) index) / HEIGHT);
+                    int x = index % HEIGHT;
                     if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                        button.setGraphic(new ImageView(smile));
+                        if (table[y][x].isFlagged()){
+                            table[y][x].toggleFlag();
+                            ++cFlags;
+                            countOfFlags.setText(String.valueOf(cFlags));
+                            button.setGraphic(null);
+                        }else if (cFlags > 0) {
+                            table[y][x].toggleFlag();
+                            --cFlags;
+                            countOfFlags.setText(String.valueOf(cFlags));
+                            button.setGraphic(new ImageView(flagImg));
+                        }
                      //   solve(root);
-                    } else {
+                    } else if (!table[y][x].isFlagged()){
                         if (fl){
                             for (int k = 0; k < WIDTH; k++) {
                                 for (int l = 0; l < HEIGHT; l++) {
@@ -203,11 +217,13 @@ public class ControllerOfGameTable implements Initializable {
                             }
                             restart.setGraphic(new ImageView(new Image("sad.png" , 64 , 64 ,true, true, true)));
                             Label label = new Label("You lose");
+                            //Timer.fl = false;
                             borderPane.setBottom(label);
                         }else {
                             cleanFromZero(index, root);
                             if (MainOfGameTable.game.getTotalBombCount() == WIDTH * HEIGHT - count){
                                 Label label = new Label("You win!");
+                               // Timer.fl = false;
                                 restart.setGraphic(new ImageView(new Image("happy.png" , 64 , 64 ,true, true, true)));
                                 borderPane.setBottom(label);
                             }

@@ -13,7 +13,7 @@ public class Piece {
         this.isRigged = isRigged;
     }
 
-    private void toggleFlag() {
+    public void toggleFlag() {
         this.isFlagged = !this.isFlagged;
     }
 
